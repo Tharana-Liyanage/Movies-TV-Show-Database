@@ -3,16 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ratings and Reviews</title>
+    <title>Streamlined Ratings & Reviews</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+    font-family: system-ui, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+}
+
+/* Responsive Setting for Mobile Screens */
+@media (max-width: 768px) { 
+    main { grid-template-columns: 1fr; } 
+}
+
+/* Cards & Containers */
+form, article {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+p { 
+    margin: 0 0 15px 0; 
+}
+
+label {
+    display: block;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+    </style>
 </head>
-<body>
-    <h1>Ratings and Reviews</h1>
+ <body>
+
+    <h2>Review Center</h2>
     <main>
+    
         <section>
-            <form id="reviewform">
+            <form id="reviewForm">
                 <p>
                     <label for="mediaTitle">Title</label>
-                    <input type="text" id="mediaTitle" name="mediaTitle" required>
+                    <input type="text" id="mediaTitle" required>
                 </p>
                 <p>
                     <label>Rating</label>
@@ -22,7 +66,6 @@
                         <input type="radio" id="star3" name="starRating" value="3"><label for="star3">★</label>
                         <input type="radio" id="star2" name="starRating" value="2"><label for="star2">★</label>
                         <input type="radio" id="star1" name="starRating" value="1"><label for="star1">★</label>
-                        
                     </fieldset>
                 </p>
                 <p>
@@ -32,6 +75,7 @@
                 <button type="submit" class="btn">Publish</button>
             </form>
         </section>
+
         <section id="feedContainer">
             <article>
                 <header>
@@ -43,6 +87,34 @@
             </article>
         </section>
     </main>
-</body>
+
+    <!-- JavaScript Engine -->
+    <script>
+        document.getElementById('reviewForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const title = document.getElementById('mediaTitle').value.trim();
+            const text = document.getElementById('critiqueMessage').value.trim();
+            const score = parseInt(document.querySelector('input[name="starRating"]:checked').value);
+
+            const starString = '★'.repeat(score) + '☆'.repeat(5 - score);
+            const feed = document.getElementById('feedContainer');
+
+            const card = document.createElement('article');
+            card.innerHTML = `
+                <header>
+                    <h3>${escapeHtml(title)}</h3>
+                    <time>Just now</time>
+                </header>
+                <span class="stars">${starString}</span>
+                <p class="body">${escapeHtml(text)}</p>
+            `;
+            feed.insertBefore(card, feed.firstChild);
+            this.reset();
+        });
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
 </body>
 </html>
